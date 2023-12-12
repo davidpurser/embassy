@@ -8,7 +8,7 @@ pub use fdcan;
 pub use fdcan::frame::{RxFrameInfo, TxFrameHeader, FrameFormat};
 pub use fdcan::id::{StandardId, ExtendedId, Id};
 pub use fdcan::{config, filter};
-use embassy_hal_common::{into_ref, PeripheralRef};
+use embassy_hal_internal::{into_ref, PeripheralRef};
 use fdcan::message_ram::RegisterBlock;
 use fdcan::LastErrorCode;
 
@@ -283,8 +283,7 @@ impl<'d, T: Instance> Fdcan<'d, T, fdcan::ConfigMode> {
         rx.set_as_af(rx.af_num(), AFType::Input);
         tx.set_as_af(tx.af_num(), AFType::OutputPushPull);
 
-        T::enable();
-        T::reset();
+        T::enable_and_reset();
         info!("can peripheral running at {}", T::frequency());
 
         rx.set_as_af(rx.af_num(), AFType::Input);
